@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--  对spring和springdatajpa进行配置  -->
+    <!--  1.创建数据库连接池druid  -->
+    <!--引入外部资源文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--第三方jar中的bean定义在xml中-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--  2.配置一个非常重要的对象,entityManagerFactory,类似mybatis的sqlSessionFactory  -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!--    配置一些细节    -->
+
+        <!--    配置数据源    -->
+        <property name="dataSource" ref="dataSource"/>
+        <!--    扫描包路径(实体类)    -->
+        <property name="packagesToScan" value="com.lagou.edu.pojo"/>
+        <!--    指定jpa具体实现,也就是hibernate    -->
+        <property name="persistenceProvider">
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean>
+        </property>
+        <!--    方言配置,框架方法细节不一样,传入具体实现类    -->
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"></bean>
+        </property>
+<!--    配置hibernate的方言    -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <!--定义hibernate的细节-->
+                <!--配置数据表是否自动创建-->
+                
+            </bean>
+        </property>
+
+    </bean>
+    <!--  3.引用上面创建的entityManagerFactory  -->
+    <!--  4.事务管理器配置  -->
+    <!--  5.声明式事务  -->
+    <!--  6.配置包扫描  -->
+
+</beans> 
+    
